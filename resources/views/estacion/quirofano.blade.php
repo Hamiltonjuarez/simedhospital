@@ -56,7 +56,7 @@
                                 <td width="100">
                                     Nombre:
                                 </td>
-                                <td>{{ $paciente->nombre.' '.$paciente->apellido }} </td>
+                                <td>{{ $paciente->nombre.' '.$paciente->apellidos }} </td>
                             </tr>
                             <tr>
                                 <td>
@@ -83,14 +83,14 @@
                         <h5 class="card-title">DATOS DEL PERSONAL MEDICO</h5>
                         <table class="table table-sm ">
                             <tr>
-                                <td width="200">Cirujano:</td>
+                                <td >Cirujano:</td>
                             <td id="doctor">Dr.{{$doctor->nombre}}</td>
                             </tr>
                             <tr>
                                 <td>
                                     Nombre del anestesiólogo:
                                 </td>
-                                <td id="anestesiologo">
+                                <td  id="anestesiologo">
                                     <td id="doctor">Dr.{{$anestesiologo->nombre}}</td>
                                 </td>
                             </tr>
