@@ -5141,7 +5141,7 @@
             },
             "notification-url": "https://larapack.io/downloads",
             "description": "This hook will add support for Voyager front-end themes",
-            "time": "2019-12-26T21:12:41+00:00"
+            "time": "2020-03-22T17:03:25+00:00"
         },
         {
             "name": "yajra/laravel-datatables-oracle",

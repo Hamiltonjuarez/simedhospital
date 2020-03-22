@@ -21,21 +21,31 @@
             </div>
         </div>
         
-    @endif
+   @else
     <div class="card">
         <div class="card-header">
-            @if($operacion == 'no asignado')
+            
+            @if($paciente == 'noasignado' )
            <p>No Hay paciente en espera </p>
             @else 
-        <div class="row">
-            <div class="col text-center">
-                <h3>Operacion de: {{$operacionnombre->procedimiento_nombre}}</h3>
+            @if ($operacion != 'no asignado')
+            <div class="row">
+                <div class="col text-center">
+                    <h3>Operacion de: {{$operacionnombre->procedimiento_nombre}}</h3>
+                </div>
+                <div class="col text-center">
+                <h3>Paciente: {{$paciente->nombre." ".$paciente->apellidos}}</h3>
+                </div>
             </div>
-            <div class="col text-center">
-            <h3>Paciente: {{$paciente->nombre." ".$paciente->apellidos}}</h3>
+            @else 
+            <div class="row">                
+                <div class="col">
+                <h3>Paciente: {{$paciente->nombre." ".$paciente->apellidos}}</h3>
+                </div>
             </div>
-        </div>
             @endif
+       
+           
 
         </div>
         <div class="card-body">
@@ -387,12 +397,14 @@
                </form>
             </div>  
             @endif
+            @endif
         </div>
         @include('estacion.mostrardatos')
        {{--  <div class="card-footer">
            
         </div> --}}
     </div>
+    @endif
 @endsection
 @section('scripts')
     <script>

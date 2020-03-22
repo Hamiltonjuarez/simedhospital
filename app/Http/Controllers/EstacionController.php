@@ -100,24 +100,40 @@ class EstacionController extends Controller
       $habitacionpaciente = habitaciones_areas::find($habitacion);
       /* return $habitacion; */
       $paciente = Paciente::where('habitacion_id',$habitacionpaciente->id)
-      ->orderBy('created_at', 'desc')->first();
+      ->orderBy('created_at', 'desc')->first();  
+      
+      
       /* return $paciente; */
-     if($paciente != null){        
+     if($paciente != null){  
+              
         $operacion = Procedimiento_estado::where([['paciente_id', $paciente->id],['estado','pendiente']])
         ->first();
        
+       
+        if($operacion != null){
+           
+            $operacionnombre = Procedimiento_tipo::find($operacion->tipoprocedimiento_id);
+        }else{
+            $operacion = 'no asignado';
         /* return $operacion; */
-        $operacionnombre = Procedimiento_tipo::find($operacion->tipoprocedimiento_id);
-     }else{
-        $operacion = 'no asignado';
-        /* return $operacion; */
+       
         $operacionnombre = 'no asignado';
+        }
+     }else{
+         
+        
+        
      }
 
      $medicos = Personal::get();
 
-     $op = Datos_operacion::where('paciente_id',$paciente->id)
-     ->orderBy('created_at', 'desc')->first();
+     if($paciente != null){
+        $op = Datos_operacion::where('paciente_id',$paciente->id)
+        ->orderBy('created_at', 'desc')->first();
+     }else{
+         $op = null;
+     }
+
         
      if($op != null){
         $doc = Personal::find($op->doctor_id);
@@ -184,7 +200,18 @@ class EstacionController extends Controller
        /*  return $personales; */
      }else{
          $operacion_id = 0;
+         
      }
+
+
+
+     if($paciente == null){
+
+        $paciente = 'noasignado';
+       
+     }
+     
+     /* return $operacionnombre; */
     
      
      
@@ -197,12 +224,14 @@ class EstacionController extends Controller
         /* return $request; */
        if($request->operacion_id == 0){
            
-           
-           if($request->doctorselect != null){               
+          
+           if($request->doctorselect != null){  
+                           
                $doctor = $request->doctorselect;
            }else{
+              
                if($request->doctorinput != null){ 
-                                    
+                             
                    $personal =Personal::create([
                        'nombre' => $request->doctorinput
                    ]);
@@ -215,8 +244,9 @@ class EstacionController extends Controller
             $anestesiologo = $request->anestesiologoselect;
         }else{
             if($request->anestesiologoinput != null){
+                
                 $personal =Personal::create([
-                    'nombre' => $request->doctorinput
+                    'nombre' => $request->anestesiologoinput
                 ]);
                 $anestesiologo = $personal->id;
             }else{
@@ -403,13 +433,20 @@ class EstacionController extends Controller
         
         $operacion = Procedimiento_estado::where(['paciente_id'=>$paciente->id,'estado'=>'pendiente'])
         ->orderBy('created_at', 'desc')->first();
+       
+       
+        if($operacion != null){
+            $operacionnombre = Procedimiento_tipo::find($operacion->tipoprocedimiento_id);
+        }else{
+            $operacion = 'no asignado';
+            $operacionnombre = 'no asignado';
+        }
+     }else{
+        
+        
+        $paciente = 'nopaciente';
         /* return $operacion; */
        
-        $operacionnombre = Procedimiento_tipo::find($operacion->tipoprocedimiento_id);
-     }else{
-        $operacion = 'no asignado';
-        /* return $operacion; */
-        $operacionnombre = 'no asignado';
      }
 $operating = Datos_operacion::find($operacion_id);
 
@@ -509,6 +546,7 @@ $operating = Datos_operacion::find($operacion_id);
        
       
        $operacion = Datos_operacion::find($request->operacionid);
+       
       $doctor = Personal::find($operacion->doctor_id);
       $anestesiologo = Personal::find($operacion->anestesiologo_id);
       $primer = Personal::find($operacion->primer_id);
@@ -522,9 +560,10 @@ $operating = Datos_operacion::find($operacion_id);
       $habitacion = habitaciones_areas::leftJoin('areas', 'areas.id', 'habitaciones_areas.area_id')->find($paciente->habitacion_id);
 
       if($habitacion->nombre_area == 'Quirofano'){
-      $operacion = Procedimiento_estado::where(['paciente_id'=>$request->pacienteid,'estado'=>'pendiente'])
+      $operacionestado = Procedimiento_estado::where(['paciente_id'=>$request->pacienteid,'estado'=>'pendiente'])
       ->orderBy('created_at', 'desc')->first();
-      $operacionnombre = Procedimiento_tipo::find($operacion->tipoprocedimiento_id);
+     
+      $operacionnombre = Procedimiento_tipo::find($operacionestado->tipoprocedimiento_id);
 
       //$paciente->update(['estado_traslado' => 'en habitacion']);
       /* $doctor=Doctor::find(Auth::user()->doctor_id); */
@@ -541,6 +580,7 @@ $operating = Datos_operacion::find($operacion_id);
     }
 
     function endoperation(Request $request){
+       
         $suma = 0;
 
         
@@ -571,6 +611,7 @@ $operating = Datos_operacion::find($operacion_id);
         
         
         $personal = Datos_operacion::find($request->personal_id);
+        /* return $personal; */
         $paciente = Paciente::find($personal->paciente_id);
        
         
@@ -621,8 +662,26 @@ $operating = Datos_operacion::find($operacion_id);
             $compresas =inventario::where('id',$compresas->id)->update([
                 'stock' => $compresas->stock - $request->compresas
             ]);
+                
+            $habitacion = habitaciones_areas::find($paciente->habitacion_id);
+          
+             
+            $operacion = Procedimiento_estado::where(['paciente_id'=>$paciente->id,'estado'=>'pendiente'])
+            ->orderBy('created_at', 'desc')->first();
+            /* return $operacion; */
+            $operacion->update([
+                'estado' => 'finalizado'
+            ]);
 
+            $habitacion->update([
+                'estado' => 'en limpieza'
+            ]);
+           /*  return $habitacion;  */
+           
             return redirect()->route('pacientes.show', $paciente->id);
+
+           
+            
 
     }
 }
