@@ -543,15 +543,7 @@ class PacientesController extends Controller
         $procedimiento->save();
       }
       /*  return $paciente; */
-       $hanterior = habitaciones_areas::find($paciente->habitacion_id);      
-       if($hanterior !== null){         
-        if($hanterior->area_id != 2){
-          /*   return $hanterior->area_id; */
-            $hanterior->update([
-                'estado' => 'libre'
-            ]);
-        }
-       }
+      
      
 
       if($habitacion->area_id != 5){
