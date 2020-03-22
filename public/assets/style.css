@@ -1,0 +1,108 @@
+
+
+.menuDoctor:hover{
+    background-image: url(../assets/img/hospital.jpg);
+}
+
+.menuDoctor a{
+    display: block;
+     width: 100%;
+      height: 100%;
+    text-decoration: none;
+    color:#000;
+}
+
+/* LOGO */
+.brand-image {
+    float: left;
+    line-height: .8;
+    max-height: 30px;
+    width: auto;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    margin-top: -3px;
+}
+
+/* NAVBAR */
+.navbar-bg-primary{
+    background-color: #003366;
+}
+
+/* NAVBAR MENU */
+.menu-bg-primary{
+    background-color: #003366;
+}
+
+
+/* CARD */
+.card-primary:not(.card-outline) .card-header {
+    background-color: #006699;
+}
+
+/* BTN */
+.btn-primary{
+    background-color: #3399ff;
+}
+
+
+.btn-info{
+
+    background-color: #009999;
+}
+.pacienteLink a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #000;
+}
+
+.form-group.required .control-label:after {
+    content:"*";
+    color:red;
+  }
+
+  .change{
+      cursor: pointer;
+  }
+
+  .change:hover{
+    background-color: rgb(122, 194, 241);
+  }
+
+  .imgHistorial{
+      width:100px;
+      height: 100px;
+  }
+
+
+  div.dataTables_wrapper div.dataTables_length label {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+  }
+  div.dataTables_wrapper div.dataTables_length select {
+    width: 75px;
+    display: inline-block;
+  }
+
+  .subir{
+        padding: 5px 10px;
+        background: #2779d6;
+        color:#fff;
+        border:0px solid #fff;
+        cursor:pointer;
+        border-radius: 8px ;
+    }
+
+    .subir:hover{
+        color:#fff;
+        background: #21bb9a;
+    }
+
+    .uno{
+        width: 100%;
+        height: 300px;
+        border-radius: 5px ;
+    }
+

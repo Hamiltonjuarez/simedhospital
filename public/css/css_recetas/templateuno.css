@@ -1,0 +1,42 @@
+@page{
+    margin: 0%;
+    padding: 0%;
+}
+body{
+    font-family: fantasy;
+}
+tr,td{
+    margin: 0%;
+    padding: 0%;
+}
+
+table{
+    table-layout: fixed;
+    width: 100%;
+}
+
+header{
+    height: 17%;
+}
+
+.text-small{
+    font-size: 12px;
+}
+
+main{
+    height: 70%;
+}
+
+.marca{
+    position: fixed;
+    opacity: 0.3;
+    width: 90%;
+    left: 10%;
+    top: 20%;
+    z-index: -2000;
+}
+
+hr{
+    margin: 0%;
+    padding: 0%;
+}
