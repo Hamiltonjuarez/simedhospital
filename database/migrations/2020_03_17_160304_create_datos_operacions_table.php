@@ -31,7 +31,7 @@ class CreateDatosOperacionsTable extends Migration
             $table->foreign('anestesiologo_id')->references('id')->on('personals')->onDelete('cascade');
             $table->foreign('primer_id')->references('id')->on('personals')->onDelete('cascade');
             $table->foreign('segundo_id')->references('id')->on('personals')->onDelete('cascade');
-            $table->foreign('instrumentalistar_id')->references('id')->on('personals')->onDelete('cascade');
+            $table->foreign('instrumentalista')->references('id')->on('personals')->onDelete('cascade');
             $table->foreign('circular')->references('id')->on('personals')->onDelete('cascade');
         });
     }

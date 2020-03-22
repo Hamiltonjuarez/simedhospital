@@ -18,6 +18,7 @@ class CreateHabitacionesAreasTable extends Migration
             $table->string('habitacion_nombre',200);
             $table->unsignedBigInteger('area_id');
             $table->string('estado',150);
+            $table->string('icon', 32);
             $table->timestamps();
 
             $table->foreign('area_id')->references('id')->on('areas')->onDelete('cascade');

@@ -78,12 +78,24 @@ class EstacionController extends Controller
         
     }
     public function selectestacion(Request $request){  
+        $areas=areas::join('habitaciones_areas', 'habitaciones_areas.area_id', '=', 'areas.id')
+        ->select('areas.nombre_area', 'habitaciones_areas.*')->orderBy('areas.id', 'asc')
+        ->orderBY('habitaciones_areas.habitacion_nombre', 'asc')->get();
+        $area_id=0;
+        
+        return view('estacion.seleccionar_habitacion', compact('areas', 'area_id'));
         /* return('here');  */    
-        $habitaciones = habitaciones_areas::get();
-        return view('estacion.seleccionar_habitacion',compact('habitaciones'));
+        /* $habitaciones = habitaciones_areas::get();
+        return view('estacion.seleccionar_habitacion',compact('habitaciones')); */
     }
 
     public function esperapaciente($habitacion){
+        $area = habitaciones_areas::join('areas', 'habitaciones_areas.area_id', '=', 'areas.id')->find($habitacion);
+
+        if($area->nombre_area=='Laboratorio Clinico'){
+            $examenes = procedimiento_tipo::where('area_id', '=', '3')->get();
+            return view('estacion.laboratorio', compact('area', 'examenes'));
+        }
        /*  return $habitacion; */
       $habitacionpaciente = habitaciones_areas::find($habitacion);
       /* return $habitacion; */
