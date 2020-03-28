@@ -15,6 +15,7 @@ use App\Anexos;
 use Auth;
 use App\Doctor_asistente;
 use App\User;
+use App\Personal_habitacion;
 use PDF;
 use App\Mix;
 use App\Examen;
@@ -79,8 +80,8 @@ class EstacionController extends Controller
     }
     public function selectestacion(Request $request){  
         $areas=areas::join('habitaciones_areas', 'habitaciones_areas.area_id', '=', 'areas.id')
-        ->select('areas.nombre_area', 'habitaciones_areas.*')->orderBy('areas.id', 'asc')
-        ->orderBY('habitaciones_areas.habitacion_nombre', 'asc')->get();
+        ->select('areas.nombre_area', 'areas.icon', 'habitaciones_areas.*')->orderBy('areas.id', 'asc')
+        ->orderBY('habitaciones_areas.id', 'asc')->get();
         $area_id=0;
         
         return view('estacion.seleccionar_habitacion', compact('areas', 'area_id'));
@@ -90,17 +91,34 @@ class EstacionController extends Controller
     }
 
     public function esperapaciente($habitacion){
+        
+        /* return $habitacion; */
         $area = habitaciones_areas::join('areas', 'habitaciones_areas.area_id', '=', 'areas.id')->find($habitacion);
-
-        if($area->nombre_area=='Laboratorio Clinico'){
+        
+        if($area->nombre_area=='Laboratorios Clinicos'){
+           
             $examenes = procedimiento_tipo::where('area_id', '=', '3')->get();
             return view('estacion.laboratorio', compact('area', 'examenes'));
         }
+        
        /*  return $habitacion; */
       $habitacionpaciente = habitaciones_areas::find($habitacion);
       /* return $habitacion; */
       $paciente = Paciente::where('habitacion_id',$habitacionpaciente->id)
-      ->orderBy('created_at', 'desc')->first();  
+      ->orderBy('created_at', 'desc')->first();
+      
+      
+      if($area->nombre_area == 'Segundo Nivel' or $area->nombre_area == 'Tercer Nivel' or $area->nombre_area == 'Quinto Nivel'){
+          $encargado = Personal_habitacion::Join('personals','personals.id','personal_habitacions.personal_id')->where('personal_habitacions.habitacion_id',$habitacion)
+          ->where('personal_habitacions.cargo','encargado') ->orderBy('personal_habitacions.created_at', 'desc')->first();
+          $flota = Personal::get();
+          if($encargado == null){
+              $encargadodato = 0;
+          }else{
+              $encargadodato = 1;
+          }
+          return view('estacion.mainhabitaciones',compact('habitacionpaciente','flota','encargado','encargadodato','area','paciente'));
+      }
       
       
       /* return $paciente; */
@@ -214,10 +232,10 @@ class EstacionController extends Controller
      /* return $operacionnombre; */
     
      
-     
+      
 
      
-      return view('estacion.cargadatos_operacion',compact('doctor','anestesista','primer','segundo','instrumentista','circular','operacion_id','medicos','habitacionpaciente','paciente','operacion','operacionnombre'));
+      return view('estacion.cargadatos_operacion',compact('area','doctor','anestesista','primer','segundo','instrumentista','circular','operacion_id','medicos','habitacionpaciente','paciente','operacion','operacionnombre'));
     }
 
     public function Personaloperacion(Request $request){
@@ -523,6 +541,7 @@ $operating = Datos_operacion::find($operacion_id);
         $circular = 'no asignado';
     }
 
+    $area = habitaciones_areas::join('areas', 'habitaciones_areas.area_id', '=', 'areas.id')->find($request->habitacion_id);
      
       return view('estacion.cargadatos_operacion',compact('doctor','anestesista','primer','segundo','instrumentista','circular','operacion_id','medicos','habitacionpaciente','paciente','operacion','operacionnombre'));
 
@@ -559,7 +578,7 @@ $operating = Datos_operacion::find($operacion_id);
       /* return $paciente; */
       $habitacion = habitaciones_areas::leftJoin('areas', 'areas.id', 'habitaciones_areas.area_id')->find($paciente->habitacion_id);
 
-      if($habitacion->nombre_area == 'Quirofano'){
+      if($habitacion->nombre_area == 'Quirofanos'){
       $operacionestado = Procedimiento_estado::where(['paciente_id'=>$request->pacienteid,'estado'=>'pendiente'])
       ->orderBy('created_at', 'desc')->first();
      
@@ -683,5 +702,57 @@ $operating = Datos_operacion::find($operacion_id);
            
             
 
+    }
+    function selectencargado(Request $request){
+        $encargado = Personal::find($request->encargado);
+        $personal_area = Personal_habitacion::create([
+            'cargo' => 'encargado',
+            'habitacion_id' => $request->habitacion,
+            'personal_id' => $request->encargado
+        ]);
+        $area = habitaciones_areas::join('areas', 'habitaciones_areas.area_id', '=', 'areas.id')->find($request->habitacion);
+
+        $encargado = Personal_habitacion::Join('personals','personals.id','personal_habitacions.personal_id')->where('personal_habitacions.habitacion_id',$request->habitacion)
+        ->where('personal_habitacions.cargo','encargado') ->orderBy('created_at', 'desc')->first();
+
+        $paciente = Paciente::where('habitacion_id',$area->id)
+        ->orderBy('created_at', 'desc')->first();
+
+        $flota = Personal::get();
+        
+        $encargadodato = 1;
+       /*  return view('estacion.mainhabitaciones',compact('flota','encargado','area','paciente','encargadodato')); */
+       return redirect()->route('estacion.esperapaciente', $request->habitacion);
+    }
+    function habitaciondisponible(Request $request){
+        $habitacion = habitaciones_areas::find($request->habitacion);
+        $habitacion->update([
+            'estado' => 'libre'
+        ]);
+
+        return redirect()->route('estacion.esperapaciente', $request->habitacion);
+    }
+    function freeroom(Request $request){
+        $habitacion = habitaciones_areas::find($request->habitacion);
+        $pacientes = Paciente::where('habitacion_id',$habitacion->id)->get();
+        
+        foreach($pacientes as $paciente){
+            $paciente->update([
+                'habitacion_id' => null
+            ]);
+        }
+        $habitacion->update([
+            'estado' => 'en limpieza'
+        ]);
+        return redirect()->route('estacion.esperapaciente', $request->habitacion);
+    }
+    function cambiarencargado(Request $request){
+       
+        $personal_area = Personal_habitacion::create([
+            'cargo' => 'encargado',
+            'habitacion_id' => $request->habitacion,
+            'personal_id' => $request->encargado
+        ]);
+        return redirect()->route('estacion.esperapaciente', $request->habitacion);
     }
 }

@@ -592,7 +592,7 @@
                                         </div>         
                                 </div>
                                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                                    <div class="card cborder2">
+                                    <div class="card cborder2" style="height:8cm;">
                                         <form action="{{-- {{route('pacientes.createcitaarea')}} --}}" method="POST" id="redirectionform">
                                         <input type="hidden" value="{{$paciente->id}}" name="paciente" id="paciented">
                                               @csrf
@@ -610,7 +610,7 @@
                                                           @endforeach                    
                                                       </select> 
                                                   </div>
-                                                  <div id="divhabitaciones2" class="col" style="display:none">
+                                                  <div id="divhabitaciones2" class="col" onchange="cargaprocedures2()" style="display:none">
                                                       <label id="labelmedicamento2" for=""></label>
                                                       <select  name="habitaciones" id="habitaciones2" class="form-control " data-live-search="true">                          
                                                           <option value="" selected disabled selected>Habitaciones disponibles</option>                                                         
@@ -618,7 +618,17 @@
                                                   </div>
                                               </div>
                                                   <div class="row d-flex justify-content-center displaybtn" >
-                                                   <button type="button" id="btngo2" style="display:none" class="btn btn-primary" onclick="envarahabitacioncalendar()">Crear Cita</button>
+                                                    <div class="col-md-6">
+                                                        <div id="divprocedimientos2" style="display:none">
+                                                            <label id="prolabel"   for="">Seleccione procedimiento</label>
+                                                            <select  name="procedimiento" id="procedimiento2"   class="form-control " data-live-search="true" onchange="submitalready()">                          
+                                                                <option value="0" selected disabled selected>procedimientos disponibles</option>                                                         
+                                                            </select>
+                                                        </div>  
+                                                   </div>
+                                                   <div class="col">
+                                                    <button type="button" id="btngo2" style="display:none; position:absolute;top:0.8cm;left:3.5cm" class="btn btn-primary" onclick="envarahabitacioncalendar()">Crear Cita</button>
+                                                   </div>
                                                  </div>
                                              </div>
                                           </form>
@@ -680,9 +690,10 @@
 
     function cargaprocedures(){
         var area = $('#areas').val();
+      
         dato = area;
         /* alert(dato); */
-        if(area == 3 || area == 4 || area == 1){           
+        if(area == 5 || area == 6 || area == 7){           
             document.getElementById('divprocedimientos').style.display = 'block';
             $('#procedimiento option:not(:first)').remove();           
                 $.ajax({
@@ -690,7 +701,8 @@
                     type: 'GET',
                     data:{'dato':dato, '_token': '{{ csrf_token() }}'},
                 success:function(response)
-                {      var contador = 0;                   
+                {      var contador = 0;    
+                         
                     response[0].forEach(element => {
                         var select = document.getElementById('procedimiento');
                         var option = document.createElement('option');
@@ -701,6 +713,7 @@
                     });
                
                 }
+               
             });   
 
         }
@@ -710,6 +723,43 @@
             document.getElementById('btngo').style.display = "block";
         }
     }
+
+    function cargaprocedures2(){
+        var area = $('#areas2').val();
+      
+        dato = area;
+        /* alert(dato); */
+        if(area == 5 || area == 6 || area == 7){           
+            document.getElementById('divprocedimientos2').style.display = 'block';
+            $('#procedimiento2 option:not(:first)').remove();           
+                $.ajax({
+                    url: '{{ route("pacientes.procedimientos_areas") }}',
+                    type: 'GET',
+                    data:{'dato':dato, '_token': '{{ csrf_token() }}'},
+                success:function(response)
+                {      var contador = 0;    
+                         
+                    response[0].forEach(element => {
+                        var select = document.getElementById('procedimiento2');
+                        var option = document.createElement('option');
+                        option.innerHTML= response[0][contador].procedimiento_nombre;
+                        option.value = response[0][contador].id;
+                        select.appendChild(option);
+                        contador++;                    
+                    });
+               
+                }
+               
+            });   
+
+        }
+        else{            
+            document.getElementById('divprocedimientos2').style.display = 'none';
+            document.getElementById('btngo2').classList.addClass = 'centerbtn';
+            document.getElementById('btngo2').style.display = "block";
+        }
+    }
+
     function submitalready(){
         var procedure = document.getElementById('procedimiento').value;
         if (procedure != null){
@@ -850,9 +900,11 @@
     }
 
     function envarahabitacioncalendar(){
+        var procedure = $('#procedimiento2').val();
+       
         var habitacion = $('#habitaciones2').val();
         var paciente = $('#paciented').val();
-        window.location="{{route('createcitaareaget.index')}}"+'/'+habitacion+'/'+paciente;
+        window.location="{{route('createcitaareaget.index')}}"+'/'+habitacion+'/'+paciente+'/'+procedure;
        
     }
     const carga = "{{asset('img/loading.gif')}}";

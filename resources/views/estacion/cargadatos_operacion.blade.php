@@ -17,7 +17,18 @@
                 <h3>Habitacion en limpieza</h3>
             </div>
             <div class="card-body">
-                
+                <div class="row">             
+                    <div class="col d-flex justify-content-center">
+                      <button class='btn btn-lg btn-success' {{-- style='background-color:#007bff;' --}}> 
+                          <div style='text-align:center;'><i onclick="habitacionlibre()" class="btn fa fa-bed" style="font-size:90px;color:white;"><i class="fa fa-check"></i></i></div>  
+                            <h4 style="color:white">Habitacion disponible</h4>
+                        </button>
+                      <form action="{{route('estacion.habitaciondisponible')}}" method="POST" id="formdisponible">
+                            @csrf
+                        <input type="hidden" value="{{$habitacionpaciente->id}}" name="habitacion">
+                        </form>
+                    </div>
+                </div> 
             </div>
         </div>
         
@@ -244,7 +255,7 @@
                  </div>
             @else
             <div class="bottones" style="display:none">
-                sdvcsdsdcsefbvfvrvrfv ervgev
+               
             </div> 
             <div class="formulariopersonal" style="display:block">
            <h4 class="text-center">Datos del personal medico </h4>       
@@ -399,6 +410,10 @@
             @endif
             @endif
         </div>
+        <form action="{{route('estacion.habitaciondisponible')}}" method="POST" id="formdisponible">
+            @csrf
+        <input type="hidden" value="{{$habitacionpaciente->id}}" name="habitacion">
+        </form>
         @include('estacion.mostrardatos')
        {{--  <div class="card-footer">
            
@@ -408,6 +423,9 @@
 @endsection
 @section('scripts')
     <script>
+        function habitacionlibre(){
+            $('#formdisponible').submit();
+        }
         function ckfdoctor(){
            var ckdoc = document.getElementById('ckdoctor');
            if(ckdoc.checked == true){

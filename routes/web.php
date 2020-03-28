@@ -54,10 +54,10 @@ Route::group(['middleware' => ['auth']], function(){
     Route::get('habitciones2','PacientesController@Habitaciones2')->name('pacientes.habitaciones2');
     Route::post('enviadopaciente','PacientesController@enviandopaciente')->name('pacientes.enviandopaciente');
     Route::post('createcitaarea','PacientesController@createcitaarea')->name('pacientes.createcitaarea');
-    Route::get('createcitaarea/{habitacion}/{paciente}','PacientesController@createcitaarea')->name('pacientes.createcitaareaget');
+    Route::get('createcitaarea/{habitacion}/{paciente}/{procedure}','PacientesController@createcitaarea')->name('pacientes.createcitaareaget');
     Route::get('createcitaarea','PacientesController@createcitaarea')->name('createcitaareaget.index');
    /*  Route::post('listadocitasarea','PacientesController@listadocitasarea')->name('pacientes.listadocitasarea'); */
-    Route::get('listadocitasarea/{id}','PacientesController@listadocitasarea')->name('pacientes.listadocitasarea');
+    Route::get('listadocitasarea/{id}/{procedure}','PacientesController@listadocitasarea')->name('pacientes.listadocitasarea');
     Route::get('listadocitasarea','PacientesController@listadocitasarea')->name('prueba');
     Route::get('procedimientos_areas','PacientesController@procedimientos_areas')->name('pacientes.procedimientos_areas');
 
@@ -180,6 +180,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::resource('anexos',  'AnexosController');
     Route::get('anexos/{id}/{tipo}', 'AnexosController@altapaciente')->name('anexos.paciente');
     Route::post('anexos/pacientestore', 'AnexosController@pacientestore')->name('anexos.newpaciente');
+    Route::post('anexos/habitacion', 'AnexosController@altahabitacion')->name('anexos.altahabitacion');
 });
 
 
@@ -250,4 +251,8 @@ Route::post('operacion/cargarpersonal','EstacionController@Personaloperacion')->
 Route::post('pacienteensala','EstacionController@llegopaciente')->name('estacion.pacientesala');
 Route::post('operation','EstacionController@startop')->name('estacion.startop');
 Route::post('endoperation','EstacionController@endoperation')->name('estacion.endoperation');
+Route::post('selectencargado','EstacionController@selectencargado')->name('estacion.selectencargado');
+Route::post('habitaciondisponible','EstacionController@habitaciondisponible')->name('estacion.habitaciondisponible');
+Route::post('freeroom','EstacionController@freeroom')->name('estacion.freeroom');
+Route::post('cambiarencargado','EstacionController@cambiarencargado')->name('estacion.cambiarencargado');
 

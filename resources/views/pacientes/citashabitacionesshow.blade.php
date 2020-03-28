@@ -47,7 +47,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group mt-4" >
-                                    <input type="text" class="form-control" id="title" name="title" value="" placeholder="Título del evento" required>
+                                <input type="text" class="form-control" id="title" name="title" value="@if($procedimiento != 0){{$pnombre}}@endif" placeholder="Título del evento" required>
                                 </div>     
                             </div>                     
                         </div>

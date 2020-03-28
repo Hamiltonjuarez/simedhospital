@@ -90,41 +90,41 @@
                                 <td>
                                     Nombre del anestesiólogo:
                                 </td>
-                                <td  id="anestesiologo">
-                                    <td id="doctor">Dr.{{$anestesiologo->nombre}}</td>
-                                </td>
+                               
+                                    <td id="anestesiologo">Dr.{{$anestesiologo->nombre}}</td>
+                                
                             </tr>
                             <tr>
                                 <td>
                                     Primer ayudante:
                                 </td>
-                                <td id="primer">
-                                    <td id="doctor">Dr.{{$primer->nombre}}</td>
-                                </td>
+                               
+                                    <td id="primer">Dr.{{$primer->nombre}}</td>
+                              
                             </tr>
                             <tr>
                                 <td>
                                     Segundo ayudante:
                                 </td>
-                                <td id="segundo">
-                                    <td id="doctor">Dr.{{$segundo->nombre}}</td>
-                                </td>
+                               
+                                    <td id="segundo">Dr.{{$segundo->nombre}}</td>
+                               
                             </tr>
                             <tr>
                                 <td>
                                     Instrumentista:
                                 </td>
-                                <td id="instrumentalista">
-                                    <td id="doctor">Dr.{{$instrumentalista->nombre}}</td>
-                                </td>
+                                
+                                    <td id="instrumentalista">Dr.{{$instrumentalista->nombre}}</td>
+                              
                             </tr>
                             <tr>
                                 <td>
                                     Circular
                                 </td>
-                                <td id="circular">
-                                    <td id="doctor">Dr.{{$circular->nombre}}</td>
-                                </td>
+                               
+                                    <td id="circular">Dr.{{$circular->nombre}}</td>
+                              
                             </tr>
                         </table>
                     </div>
@@ -230,12 +230,12 @@
             document.getElementById('agujas').contentEditable = "true";
             
 
-            document.getElementById('doctor').classList.add('editableclass');
-            document.getElementById('anestesiologo').classList.add('editableclass');
-            document.getElementById('primer').classList.add('editableclass');
-            document.getElementById('segundo').classList.add('editableclass');
-            document.getElementById('instrumentalista').classList.add('editableclass');
-            document.getElementById('circular').classList.add('editableclass');
+                /* document.getElementById('doctor').classList.add('editableclass');
+                document.getElementById('anestesiologo').classList.add('editableclass');
+                document.getElementById('primer').classList.add('editableclass');
+                document.getElementById('segundo').classList.add('editableclass');
+                document.getElementById('instrumentalista').classList.add('editableclass');
+                document.getElementById('circular').classList.add('editableclass'); */
             document.getElementById('cirujia').classList.add('editableclass');
             document.getElementById('anestesia').classList.add('editableclass');
             document.getElementById('inicioanestesia').classList.add('editableclass');

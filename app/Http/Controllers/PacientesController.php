@@ -534,7 +534,7 @@ class PacientesController extends Controller
       /*  return $request->procedimiento; */
        $tipoprocedimiento = Procedimiento_tipo::find($request->procedimiento);
        
-      if($request->areas == 3 or $request->areas == 4 or $request->areas == 1){
+      if($request->areas == 5 or $request->areas == 6 or $request->areas == 7){
         $procedimiento = new Procedimiento_estado;
         $procedimiento->paciente_id = $paciente->id;
         $procedimiento->habitacion_id = $habitacion->id;
@@ -544,9 +544,17 @@ class PacientesController extends Controller
       }
       /*  return $paciente; */
       
-     
+     $anterior = habitaciones_areas::find($paciente->habitacion_id);
 
-      if($habitacion->area_id != 5){
+     if($anterior != null){
+         if($anterior->area_id == 1 or $anterior->area_id == 2 or $anterior->area_id ==3){
+             $anterior->update([
+                 'estado' => 'en limpieza'
+             ]);
+         }
+     }
+
+      if($habitacion->area_id != 7 || $habitacion->area_id != 8 ){
             $habitacion->update([
                 'estado' => 'ocupada'
              ]);
@@ -577,23 +585,37 @@ class PacientesController extends Controller
       
     }
 
-    public function createcitaarea($habitacion, $paciente){
-      
+    public function createcitaarea($habitacion, $paciente,$procedure){
+       if($procedure != 0){
+           $procedimiento = Procedimiento_tipo::find($procedure);
+           $pnombre = $procedimiento->procedimiento_nombre;
+           $procedimiento = 1;
+       }else{
+           $procedimiento = 0;
+       }
         $citashabitacion = Cita::where('habitacion_id',$habitacion)->get();
         $habitacion = habitaciones_areas::find($habitacion);
         $paciente = Paciente::find($paciente);
        
-        return view('pacientes.citashabitaciones', compact('citashabitacion','habitacion','paciente'));
+        return view('pacientes.citashabitaciones', compact('pnombre','procedimiento','citashabitacion','habitacion','paciente'));
     }
 
-    public function listadocitasarea(Request $request, $habitacion){
-        /* return $request; */
+    public function listadocitasarea(Request $request, $habitacion, $procedure){
+       
+
+        if($procedure != 0){
+            $procedimiento = Procedimiento_tipo::find($procedure);
+            $pnombre = $procedimiento->procedimiento_nombre;
+            $procedimiento = 1;
+        }else{
+            $procedimiento = 0;
+        }
        
         $citashabitacion = Cita::where('habitacion_id',$habitacion)->get();
         $habitacion = habitaciones_areas::find($habitacion);
         $pacientes = Paciente::select('id','nombre','apellidos')->where('doctor_id', Auth::user()->doctor_id)->orderBy('created_at','DESC')->paginate(25);
        
-        return view('pacientes.citashabitacionesshow', compact('citashabitacion','habitacion','pacientes'));
+        return view('pacientes.citashabitacionesshow', compact('procedimiento','pnombre','citashabitacion','habitacion','pacientes'));
     }
 
 

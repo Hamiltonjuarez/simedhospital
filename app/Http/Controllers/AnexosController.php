@@ -319,5 +319,11 @@ class AnexosController extends Controller
             ]);
         }
     }
+    function altahabitacion(Request $request){
+       $paciente = Paciente::find( $request->paciente);
+       $tipo = 'alta';
+
+        return view('Anexos.altaformhabitacion', compact('paciente','tipo'));
+    }
 
 }
